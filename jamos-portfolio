@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Full Stack Developer</title>
+</head>
+<body>
+    <header>
+        <section id="hero" class="hero">
+            <div class="hero-content">
+                <p>Hi, I'm</p>
+                <h1>Jane Doe</h1>
+                <p class="tagline">Full Stack Developer crafting beautiful web experiences</p>
+                <div class="chips">
+                    <span>HTML</span>
+                    <span>CSS</span>
+                    <span>JavaScript</span>
+                    <span>React</span>
+                </div>
+                <div class="cta-buttons">
+                    <a href="#projects" class="btn btn-primary">View Projects</a>
+                    <a href="#contact" class="btn btn-secondary">Contact Me</a>
+                </div>
+            </div>
+        </section>
+    </header>
+
+    <main>
+        <section id="projects">
+            <h2>Featured Projects</h2>
+            <div class="grid">
+                <article class="card">
+                    <h3>E-Commerce Platform</h3>
+                    <p>Full-stack shopping app with payment integration and admin dashboard.</p>
+                    <small>React, Node.js, MongoDB, Stripe</small>
+                    <p><a href="#">Live Demo</a> | <a href="#">Source</a></p>
+                </article>
+                <article class="card">
+                    <h3>Task Management App</h3>
+                    <p>Real-time collaborative task manager with drag-and-drop interface.</p>
+                    <small>Vue.js, Firebase, Socket.io</small>
+                    <p><a href="#">Live Demo</a> | <a href="#">Source</a></p>
+                </article>
+                <article class="card">
+                    <h3>Weather Dashboard</h3>
+                    <p>Responsive weather app with forecasts, maps, and location search.</p>
+                    <small>Svelte, OpenWeather API, Leaflet</small>
+                    <p><a href="#">Live Demo</a> | <a href="#">Source</a></p>
+                </article>
+            </div>
+        </section>
+
+        <section id="about">
+            <h2>About Me</h2>
+            <p>Passionate full-stack developer with 5+ years experience building scalable web applications. Specializing in modern JavaScript frameworks and creating intuitive user experiences. Always learning and adapting to new technologies.</p>
+        </section>
+
+        <section id="contact">
+            <h2>Get In Touch</h2>
+            <p><a href="mailto:hello@janedoe.dev">hello@janedoe.dev</a></p>
+            <p>
+                <a href="https://github.com/janedoe">GitHub</a> |
+                <a href="https://linkedin.com/in/janedoe">LinkedIn</a>
+            </p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="year"></span> Jane Doe. All rights reserved.</p>
+    </footer>
+
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body {
+            background: #0f172a;
+            color: #e5e7eb;
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+        
+        a { 
+            color: #38bdf8; 
+            text-decoration: none; 
+        }
+        a:hover { 
+            text-decoration: underline; 
+        }
+        
+        header, main, footer {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .hero {
+            display: flex;
+            align-items: center;
+            min-height: 80vh;
+            padding: 2rem 0;
+        }
+        
+        .hero-content {
+            max-width: 600px;
+        }
+        
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin: 0.5rem 0 1rem;
+            line-height: 1.1;
+        }
+        
+        .tagline {
+            color: #9ca3af;
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+        }
+        
+        .chips {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .chips span {
+            background: #1e293b;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+        
+        .btn-primary {
+            background: #38bdf8;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #0ea5e9;
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            border: 2px solid #38bdf8;
+            color: #38bdf8;
+            background: transparent;
+        }
+        
+        .btn-secondary:hover {
+            background: #38bdf8;
+            color: white;
+        }
+        
+        section {
+            padding: 4rem 0;
+        }
+        
+        section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            transition: all 0.2s;
+        }
+        
+        .card:hover {
+            border-color: #38bdf8;
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3);
+        }
+        
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+        
+        .card small {
+            color: #9ca3af;
+            display: block;
+            margin: 1rem 0;
+            font-size: 0.875rem;
+        }
+        
+        #about p, #contact p {
+            max-width: 600px;
+            margin: 0 auto 1rem;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid #334155;
+            color: #9ca3af;
+        }
+        
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .hero { 
+                flex-direction: column; 
+                text-align: center; 
+                min-height: 70vh; 
+            }
+            .cta-buttons { justify-content: center; }
+            .grid { 
+                grid-template-columns: 1fr; 
+                gap: 1.5rem;
+            }
+            section h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('year').textContent = new Date().getFullYear();
+        });
+    </script>
+</body>
+</html>
