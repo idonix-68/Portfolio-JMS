@@ -1,4 +1,28 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jamos Portfolio</title>
+</head>
+<body>
+  <header>
+    <h1>Hi, I'm Jamos</h1>
+    <p>Full Stack Developer crafting beautiful web experiences</p>
+    <nav>
+      <a href="#projects">View Projects</a>
+      <a href="#contact">Contact Me</a>
+    </nav>
+  </header>
+  <main>
+    <section id="projects">
+      <h2>Featured Projects</h2>
+      <p>E-Commerce Platform – Full-stack shopping app with payment integration.</p>
+    </section>
+  </main>
+</body>
+</html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
