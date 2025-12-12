@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Portfolio Audit Test</title>
+    <style>
+        .test-result { padding: 10px; margin: 10px 0; border-left: 4px solid; }
+        .pass { border-color: green; background: #f0f9ff; }
+        .fail { border-color: red; background: #fef2f2; }
+        .warning { border-color: yellow; background: #fffbeb; }
+        pre { background: #f3f4f6; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Portfolio Audit Test Results</h1>
+    <div id="results"></div>
+
+    <script>
+        // Load the portfolio file and test it
+        fetch('/jamos-portfolio')
+            .then(response => response.text())
+            .then(html => {
+                testPortfolio(html);
+            })
+            .catch(error => {
+                document.getElementById('results').innerHTML = '<div class="test-result fail">Failed to load portfolio: ' + error.message + '</div>';
+            });
+
+        function testPortfolio(html) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const results = [];
+
+            // Test 1: Check for duplicate DOCTYPE
+            const doctypeCount = (html.match(/<!DOCTYPE html>/gi) || []).length;
+            if (doctypeCount > 1) {
+                results.push({
+                    type: 'fail',
+                    title: 'Duplicate DOCTYPE Declaration',
+                    description: `Found ${doctypeCount} DOCTYPE declarations. Only one should exist.`,
+                    fix: 'Remove duplicate DOCTYPE declarations, keep only the first one.'
+                });
+            } else {
+                results.push({
+                    type: 'pass',
+                    title: 'Single DOCTYPE Declaration',
+                    description: 'Correct number of DOCTYPE declarations found.'
+                });
+            }
+
+            // Test 2: Check for multiple HTML documents
+            const htmlTagCount = (html.match(/<html[^>]*>/gi) || []).length;
+            if (htmlTagCount > 1) {
+                results.push({
+                    type: 'fail',
+                    title: 'Multiple HTML Documents',
+                    description: `Found ${htmlTagCount} <html> tags. Only one HTML document should exist.`,
+                    fix: 'Merge the content into a single HTML document structure.'
+                });
+            }
+
+            // Test 3: Check for placeholder links
+            const placeholderLinks = doc.querySelectorAll('a[href="#"]');
+            if (placeholderLinks.length > 0) {
+                results.push({
+                    type: 'warning',
+                    title: 'Placeholder Links Found',
+                    description: `Found ${placeholderLinks.length} links with href="#" (placeholder targets)`,
+                    details: Array.from(placeholderLinks).map(link => {
+                        const card = link.closest('.card');
+                        if (card) {
+                            const title = card.querySelector('h3');
+                            return `${title ? title.textContent : 'Unknown project'}: "${link.textContent}"`;
+                        }
+                        return `"${link.textContent}"`;
+                    }).join(', '),
+                    fix: 'Replace placeholder href="#" with actual project URLs or remove links if projects are not available.'
+                });
+            }
+
+            // Test 4: Check for accessibility issues
+            const images = doc.querySelectorAll('img');
+            if (images.length > 0) {
+                const imagesWithoutAlt = Array.from(images).filter(img => !img.hasAttribute('alt'));
+                if (imagesWithoutAlt.length > 0) {
+                    results.push({
+                        type: 'warning',
+                        title: 'Images Missing Alt Attributes',
+                        description: `Found ${imagesWithoutAlt.length} images without alt attributes`,
+                        fix: 'Add descriptive alt attributes to all images for screen reader accessibility.'
+                    });
+                }
+            }
+
+            // Test 5: Check for ARIA labels and semantic structure
+            const linksWithoutLabels = Array.from(doc.querySelectorAll('a')).filter(link => 
+                !link.hasAttribute('aria-label') && 
+                !link.textContent.trim() &&
+                link.getAttribute('title')
+            );
+            
+            if (linksWithoutLabels.length > 0) {
+                results.push({
+                    type: 'warning',
+                    title: 'Links Without Descriptive Text',
+                    description: `Found ${linksWithoutLabels.length} links that may lack descriptive content`,
+                    fix: 'Ensure all links have either aria-label, title, or descriptive text content.'
+                });
+            }
+
+            // Test 6: Check internal anchor links
+            const internalLinks = doc.querySelectorAll('a[href^="#"]');
+            internalLinks.forEach(link => {
+                const targetId = link.getAttribute('href').substring(1);
+                const target = doc.getElementById(targetId);
+                if (!target) {
+                    results.push({
+                        type: 'fail',
+                        title: 'Broken Internal Link',
+                        description: `Link href="${link.getAttribute('href')}" points to non-existent element with id="${targetId}"`,
+                        fix: `Add an element with id="${targetId}" or update the link href.`
+                    });
+                }
+            });
+
+            // Test 7: Check year script functionality
+            const yearScript = html.match(/document\.getElementById\('year'\)/);
+            const yearElement = doc.getElementById('year');
+            if (yearScript && yearElement) {
+                results.push({
+                    type: 'pass',
+                    title: 'Year Script Structure',
+                    description: 'Year script appears to have proper structure with null checking.',
+                    details: 'Script includes DOMContentLoaded listener and element existence check.'
+                });
+            } else if (yearScript && !yearElement) {
+                results.push({
+                    type: 'fail',
+                    title: 'Year Script Missing Target Element',
+                    description: 'Year script exists but #year element not found',
+                    fix: 'Add <span id="year"></span> element to footer.'
+                });
+            }
+
+            // Test 8: Check for skip navigation
+            const skipLinks = doc.querySelectorAll('a[href^="#main"], a[href^="#content"], .skip-link');
+            if (skipLinks.length === 0) {
+                results.push({
+                    type: 'warning',
+                    title: 'No Skip Navigation Links',
+                    description: 'No skip navigation links found for keyboard users',
+                    fix: 'Add skip navigation link: <a href="#main" class="skip-link">Skip to main content</a>'
+                });
+            }
+
+            // Test 9: Check heading hierarchy
+            const headings = doc.querySelectorAll('h1, h2, h3, h4, h5, h6');
+            let headingHierarchyIssue = false;
+            let previousLevel = 0;
+            headings.forEach(heading => {
+                const level = parseInt(heading.tagName.charAt(1));
+                if (level > previousLevel + 1) {
+                    headingHierarchyIssue = true;
+                }
+                previousLevel = level;
+            });
+            
+            if (headingHierarchyIssue) {
+                results.push({
+                    type: 'warning',
+                    title: 'Heading Hierarchy Issues',
+                    description: 'Skipped heading levels detected in document structure',
+                    fix: 'Ensure headings follow proper hierarchy (h1 > h2 > h3, etc.) without skipping levels.'
+                });
+            }
+
+            // Render results
+            const resultsContainer = document.getElementById('results');
+            resultsContainer.innerHTML = results.map(result => `
+                <div class="test-result ${result.type}">
+                    <h3>${result.title}</h3>
+                    <p>${result.description}</p>
+                    ${result.details ? `<pre>${result.details}</pre>` : ''}
+                    ${result.fix ? `<p><strong>Fix:</strong> ${result.fix}</p>` : ''}
+                </div>
+            `).join('');
+
+            console.log('Test results:', results);
+        }
+    </script>
+</body>
+</html>
